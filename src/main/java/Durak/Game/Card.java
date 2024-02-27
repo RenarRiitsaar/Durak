@@ -15,6 +15,7 @@ public class Card {
     private final String cardID;
     @Getter
     private final String suit;
+    @Getter
     private final int value;
     @Getter
     private final ImageIcon cardTemplate;

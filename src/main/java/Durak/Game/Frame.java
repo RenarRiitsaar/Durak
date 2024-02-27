@@ -3,6 +3,7 @@ package Durak.Game;
 import Durak.Players.ComputerPlayer;
 import Durak.Players.Player;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,31 +16,31 @@ import java.util.Random;
 public class Frame extends JFrame implements ActionListener {
 
     @Getter
-    public static JPanel playerCard1 = new JPanel();
+    private static JPanel playerCard1 = new JPanel();
     @Getter
-    public static JPanel playerCard2 = new JPanel();
+    private static JPanel playerCard2 = new JPanel();
     @Getter
-    public static JPanel playerCard3 = new JPanel();
+    private static JPanel playerCard3 = new JPanel();
     @Getter
-    public static JPanel playerCard4 = new JPanel();
+    private static JPanel playerCard4 = new JPanel();
     @Getter
-    public static JPanel playerCard5 = new JPanel();
+    private static JPanel playerCard5 = new JPanel();
     @Getter
-    public static JPanel playerCard6 = new JPanel();
+    private static JPanel playerCard6 = new JPanel();
     @Getter
-    public static JPanel playerCard7 = new JPanel();
+    private static JPanel playerCard7 = new JPanel();
     @Getter
-    public static JPanel playerCard8 = new JPanel();
+    private static JPanel playerCard8 = new JPanel();
     @Getter
-    public static JPanel playerCard9 = new JPanel();
+    private static JPanel playerCard9 = new JPanel();
     @Getter
-    public static JPanel playerCard10 = new JPanel();
+    private static JPanel playerCard10 = new JPanel();
     @Getter
-    public static JPanel playerCard11 = new JPanel();
+    private static JPanel playerCard11 = new JPanel();
     @Getter
-    public static JPanel playerCard12 = new JPanel();
+    private static JPanel playerCard12 = new JPanel();
     @Getter
-    public static JPanel cardPack = new JPanel();
+    private static JPanel cardPack = new JPanel();
     @Getter
     private static Player player;
     @Getter
@@ -56,9 +57,12 @@ public class Frame extends JFrame implements ActionListener {
     private static JPanel cpuCard10 = new JPanel();
     private static JPanel cpuCard11 = new JPanel();
     private static JPanel cpuCard12 = new JPanel();
-    private static JPanel trump = new JPanel();
     @Getter
+    private static JPanel trump = new JPanel();
+    @Getter @Setter
     private static String trumpSuit;
+    @Getter
+    private static JLabel notification = new JLabel();
 
 
     public Frame(){
@@ -71,15 +75,11 @@ public class Frame extends JFrame implements ActionListener {
         cpu.dealHand();
 
 
-        drawTrump();
+        frameSettings();
+        GameActions.drawTrump();
         playerCards();
         cpuCards();
-
         GameActions.checkFirstTurn();
-
-        frameSettings();
-
-
     }
 
     private void frameSettings() {
@@ -89,33 +89,39 @@ public class Frame extends JFrame implements ActionListener {
         this.setLayout(null);
         this.setVisible(true);
 
+        notification.setFont(new Font("MV Boli", Font.BOLD,30));
+        notification.setText("");
+        notification.setBounds(300, 100, 1000, 100);
+        notification.setVisible(true);
+
+        this.add(notification);
         this.add(cardPack);
-        this.add(playerCard1);
-        this.add(playerCard2);
-        this.add(playerCard3);
-        this.add(playerCard4);
-        this.add(playerCard5);
-        this.add(playerCard6);
-        this.add(playerCard7);
-        this.add(playerCard8);
-        this.add(playerCard9);
-        this.add(playerCard10);
-        this.add(playerCard11);
         this.add(playerCard12);
+        this.add(playerCard11);
+        this.add(playerCard10);
+        this.add(playerCard9);
+        this.add(playerCard8);
+        this.add(playerCard7);
+        this.add(playerCard6);
+        this.add(playerCard5);
+        this.add(playerCard4);
+        this.add(playerCard3);
+        this.add(playerCard2);
+        this.add(playerCard1);
 
         this.add(trump);
-        this.add(cpuCard1);
-        this.add(cpuCard2);
-        this.add(cpuCard3);
-        this.add(cpuCard4);
-        this.add(cpuCard5);
-        this.add(cpuCard6);
-        this.add(cpuCard7);
-        this.add(cpuCard8);
-        this.add(cpuCard9);
-        this.add(cpuCard10);
-        this.add(cpuCard11);
         this.add(cpuCard12);
+        this.add(cpuCard11);
+        this.add(cpuCard10);
+        this.add(cpuCard9);
+        this.add(cpuCard8);
+        this.add(cpuCard7);
+        this.add(cpuCard6);
+        this.add(cpuCard5);
+        this.add(cpuCard4);
+        this.add(cpuCard3);
+        this.add(cpuCard2);
+        this.add(cpuCard1);
     }
 
     public static ImageIcon rotateIcon(ImageIcon icon, double angle) {
@@ -137,34 +143,10 @@ public class Frame extends JFrame implements ActionListener {
 
     }
 
-    private static void drawTrump() {
 
-        trump.setBounds(75,430,100,100);
-        Random random = new Random();
-        int randomTrump = random.nextInt(Card.getDeck().size());
+    private static void cpuCards() {
 
-        ImageIcon icon = Card.getDeck().get(randomTrump).getCardTemplate();
-
-        trumpSuit = Card.getDeck().get(randomTrump).getSuit();
-
-        displayCardImage(trump, rotateIcon(icon,90));
-
-        Card trumpToLastIndex = Card.getDeck().get(randomTrump);
-        Card.getDeck().add(trumpToLastIndex);
-        Card.getDeck().remove(randomTrump);
-
-        cardPack.setBounds(50,425,75,124);
-        displayCardImage(cardPack, Card.getBack());
-
-
-
-
-
-    }
-
-    private static void cpuCards(){
-
-        cpuCard1.setBounds(250,200,75,124);
+        cpuCard1.setBounds(325, 200, 75, 115);
         cpuCard1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -173,7 +155,7 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard2.setBounds(300,200,75,124);
+        cpuCard2.setBounds(375, 200, 75, 115);
         cpuCard2.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -182,7 +164,7 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard3.setBounds(350,200,75,124);
+        cpuCard3.setBounds(425, 200, 75, 115);
         cpuCard3.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -191,7 +173,7 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard4.setBounds(400,200,75,124);
+        cpuCard4.setBounds(475, 200, 75, 115);
         cpuCard4.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -200,7 +182,7 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard5.setBounds(450,200,75,124);
+        cpuCard5.setBounds(525, 200, 75, 115);
         cpuCard5.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -209,7 +191,7 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard6.setBounds(500,200,75,124);
+        cpuCard6.setBounds(575, 200, 75, 115);
         cpuCard6.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -218,7 +200,9 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard7.setBounds(100,200,100,100);
+        cpuCard7.setBounds(325, 250, 75, 115);
+        cpuCard7.setVisible(false);
+
         cpuCard7.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -227,7 +211,8 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard8.setBounds(100,100,100,100);
+        cpuCard8.setBounds(375, 250, 75, 115);
+        cpuCard8.setVisible(false);
         cpuCard8.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -236,7 +221,8 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard9.setBounds(100,100,100,100);
+        cpuCard9.setBounds(425, 250, 75, 115);
+        cpuCard9.setVisible(false);
         cpuCard9.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -245,7 +231,8 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard10.setBounds(100,100,100,100);
+        cpuCard10.setBounds(475, 250, 75, 115);
+        cpuCard10.setVisible(false);
         cpuCard10.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -255,7 +242,8 @@ public class Frame extends JFrame implements ActionListener {
         });
 
 
-        cpuCard11.setBounds(100,100,100,100);
+        cpuCard11.setBounds(525, 250, 75, 115);
+        cpuCard11.setVisible(false);
         cpuCard11.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -264,7 +252,8 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        cpuCard12.setBounds(100,100,100,100);
+        cpuCard12.setBounds(575, 250, 75, 115);
+        cpuCard12.setVisible(false);
         cpuCard12.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -272,6 +261,7 @@ public class Frame extends JFrame implements ActionListener {
                 System.out.println("Card12 clicked");
             }
         });
+
         displayCardImage(cpuCard1, cpu.getHand().get(0).getCardTemplate());
         displayCardImage(cpuCard2, cpu.getHand().get(1).getCardTemplate());
         displayCardImage(cpuCard3, cpu.getHand().get(2).getCardTemplate());
@@ -279,72 +269,110 @@ public class Frame extends JFrame implements ActionListener {
         displayCardImage(cpuCard5, cpu.getHand().get(4).getCardTemplate());
         displayCardImage(cpuCard6, cpu.getHand().get(5).getCardTemplate());
 
+        int numOfCards = cpu.getHand().size();
 
-        //displayCardImage(cpuCard7, cpu.getHand().get(6).getCardTemplate());
-        //displayCardImage(cpuCard8, cpu.getHand().get(7).getCardTemplate());
-        //displayCardImage(cpuCard9, cpu.getHand().get(8).getCardTemplate());
-        //displayCardImage(cpuCard10, cpu.getHand().get(9).getCardTemplate());
-        //displayCardImage(cpuCard11, cpu.getHand().get(10).getCardTemplate());
-        //displayCardImage(cpuCard12, cpu.getHand().get(11).getCardTemplate());
+        for (int i = 6; i < numOfCards; i++) {
 
+
+            switch (i) {
+                case 7:
+                    cpuCard7.setVisible(true);
+                    displayCardImage(cpuCard7, cpu.getHand().get(6).getCardTemplate());
+
+                case 8:
+                    cpuCard8.setVisible(true);
+                    displayCardImage(cpuCard8, cpu.getHand().get(7).getCardTemplate());
+
+                case 9:
+                    cpuCard9.setVisible(true);
+                    displayCardImage(cpuCard9, cpu.getHand().get(8).getCardTemplate());
+
+                case 10:
+                    cpuCard10.setVisible(true);
+                    displayCardImage(cpuCard10, cpu.getHand().get(9).getCardTemplate());
+
+                case 11:
+                    cpuCard11.setVisible(true);
+                    displayCardImage(cpuCard11, cpu.getHand().get(10).getCardTemplate());
+
+                case 12:
+                    cpuCard12.setVisible(true);
+                    displayCardImage(cpuCard12, cpu.getHand().get(11).getCardTemplate());
+            }
+        }
     }
 
+
     private static void playerCards() {
-        playerCard1.setBounds(250,600,75,124);
+        playerCard1.setBounds(325, 600, 75, 115);
         playerCard1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card1 Clicked");
+                playerCard1.setBounds(200, 450, 75, 115);
+                playerCard1.repaint();
             }
         });
 
-        playerCard2.setBounds(300,600,75,124);
+        playerCard2.setBounds(375, 600, 75, 115);
         playerCard2.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card2 clicked");
+                playerCard2.setBounds(300, 450, 75, 115);
+                playerCard2.repaint();
+
             }
         });
 
-        playerCard3.setBounds(350,600,75,124);
+        playerCard3.setBounds(425, 600, 75, 115);
         playerCard3.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card3 clicked");
+                playerCard3.setBounds(400, 450, 75, 115);
+                playerCard3.repaint();
             }
         });
 
-        playerCard4.setBounds(400,600,75,124);
+        playerCard4.setBounds(475, 600, 75, 115);
         playerCard4.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card4 Clicked");
+                playerCard4.setBounds(500, 450, 75, 115);
+                playerCard4.repaint();
             }
         });
 
-        playerCard5.setBounds(450,600,75,124);
+        playerCard5.setBounds(525, 600, 75, 115);
         playerCard5.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card5 clicked");
+                playerCard5.setBounds(600, 450, 75, 115);
+                playerCard5.repaint();
             }
         });
 
-        playerCard6.setBounds(500,600,75,124);
+        playerCard6.setBounds(575, 600, 75, 115);
         playerCard6.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card6 clicked");
+                playerCard6.setBounds(700, 450, 75, 115);
+                playerCard6.repaint();
             }
         });
 
-        playerCard7.setBounds(100,100,100,100);
+        playerCard7.setBounds(325, 650, 75, 115);
+        playerCard7.setVisible(false);
         playerCard7.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -353,7 +381,8 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        playerCard8.setBounds(100,100,100,100);
+        playerCard8.setBounds(375, 650, 75, 115);
+        playerCard8.setVisible(false);
         playerCard8.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -362,7 +391,8 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        playerCard9.setBounds(100,100,100,100);
+        playerCard9.setBounds(425, 650, 75, 115);
+        playerCard9.setVisible(false);
         playerCard9.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -371,7 +401,8 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        playerCard10.setBounds(100,100,100,100);
+        playerCard10.setBounds(475, 650, 75, 115);
+        playerCard10.setVisible(false);
         playerCard10.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -380,7 +411,8 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        playerCard11.setBounds(100,100,100,100);
+        playerCard11.setBounds(525, 650, 75, 115);
+        playerCard11.setVisible(false);
         playerCard11.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -389,7 +421,8 @@ public class Frame extends JFrame implements ActionListener {
             }
         });
 
-        playerCard12.setBounds(100,100,100,100);
+        playerCard12.setBounds(575, 650, 75, 115);
+        playerCard12.setVisible(false);
         playerCard12.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -404,13 +437,39 @@ public class Frame extends JFrame implements ActionListener {
         displayCardImage(playerCard4, player.getHand().get(3).getCardTemplate());
         displayCardImage(playerCard5, player.getHand().get(4).getCardTemplate());
         displayCardImage(playerCard6, player.getHand().get(5).getCardTemplate());
-        //displayCardImage(playerCard7, player.getHand().get(6).getCardTemplate());
-        //displayCardImage(playerCard8, player.getHand().get(7).getCardTemplate());
-        //displayCardImage(playerCard9, player.getHand().get(8).getCardTemplate());
-        //displayCardImage(playerCard10, player.getHand().get(9).getCardTemplate());
-        //displayCardImage(playerCard11, player.getHand().get(10).getCardTemplate());
-        //displayCardImage(playerCard12, player.getHand().get(11).getCardTemplate());
 
+        int numOfCards = player.getHand().size();
+
+
+        for (int i = 6; i < numOfCards; i++) {
+
+
+            switch (i) {
+                case 7:
+                    playerCard7.setVisible(true);
+                    displayCardImage(playerCard7, player.getHand().get(6).getCardTemplate());
+
+                case 8:
+                    playerCard8.setVisible(true);
+                    displayCardImage(playerCard8, player.getHand().get(7).getCardTemplate());
+
+                case 9:
+                    playerCard9.setVisible(true);
+                    displayCardImage(playerCard9, player.getHand().get(8).getCardTemplate());
+
+                case 10:
+                    playerCard10.setVisible(true);
+                    displayCardImage(playerCard10, player.getHand().get(9).getCardTemplate());
+
+                case 11:
+                    playerCard11.setVisible(true);
+                    displayCardImage(playerCard11, player.getHand().get(10).getCardTemplate());
+
+                case 12:
+                    playerCard12.setVisible(true);
+                    displayCardImage(playerCard12, player.getHand().get(11).getCardTemplate());
+            }
+        }
     }
 
     public static void displayCardImage(JPanel jp, ImageIcon imageIcon) {
