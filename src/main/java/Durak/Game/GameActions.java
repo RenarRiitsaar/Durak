@@ -1,18 +1,60 @@
 package Durak.Game;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GameActions {
 
     private static final Random random = new Random();
     private static List<Card> tableCards = new ArrayList<>();
-    @Getter
-    private static boolean isPlayerTurn = false;
+    @Getter @Setter
+    private static boolean isPlayerTurn;
 
 
+    public static void cpuTurn() {
+        List<Card> cpuHand = Frame.getCpu().getHand();
+        cpuHand.sort(Comparator.comparingInt(Card::getValue));
+
+        boolean allOtherSuitsOut = true;
+
+
+        for (Card card : cpuHand) {
+            if (!Objects.equals(card.getSuit(), Frame.getTrumpSuit())) {
+                allOtherSuitsOut = false;
+                break;
+            }
+        }
+
+        if (!isPlayerTurn) {
+            if (allOtherSuitsOut) {
+
+                for (int i = 0; i < cpuHand.size(); i++) {
+                    if (Objects.equals(cpuHand.get(i).getSuit(), Frame.getTrumpSuit())) {
+                        tableCards.add(cpuHand.get(i));
+                        cpuHand.remove(i);
+                        break;
+                    }
+                }
+            } else {
+
+                for (int i = 0; i < cpuHand.size(); i++) {
+                    if (!Objects.equals(cpuHand.get(i).getSuit(), Frame.getTrumpSuit())) {
+                        tableCards.add(cpuHand.get(i));
+                        cpuHand.remove(i);
+                        break;
+                    }
+                }
+            }
+            isPlayerTurn = true;
+            System.out.println(tableCards + "TABLE\n");
+            System.out.println(cpuHand);
+        }
+    }
     public static void drawTrump() {
 
         Frame.getTrump().setBounds(75,430,100,100);

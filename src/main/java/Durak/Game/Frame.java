@@ -80,6 +80,7 @@ public class Frame extends JFrame implements ActionListener {
         playerCards();
         cpuCards();
         GameActions.checkFirstTurn();
+        GameActions.cpuTurn();
     }
 
     private void frameSettings() {
@@ -152,6 +153,7 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card1 Clicked");
+
             }
         });
 
@@ -312,6 +314,8 @@ public class Frame extends JFrame implements ActionListener {
                 System.out.println("Card1 Clicked");
                 playerCard1.setBounds(200, 450, 75, 115);
                 playerCard1.repaint();
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -323,6 +327,8 @@ public class Frame extends JFrame implements ActionListener {
                 System.out.println("Card2 clicked");
                 playerCard2.setBounds(300, 450, 75, 115);
                 playerCard2.repaint();
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
 
             }
         });
@@ -335,6 +341,8 @@ public class Frame extends JFrame implements ActionListener {
                 System.out.println("Card3 clicked");
                 playerCard3.setBounds(400, 450, 75, 115);
                 playerCard3.repaint();
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -346,6 +354,8 @@ public class Frame extends JFrame implements ActionListener {
                 System.out.println("Card4 Clicked");
                 playerCard4.setBounds(500, 450, 75, 115);
                 playerCard4.repaint();
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -357,6 +367,8 @@ public class Frame extends JFrame implements ActionListener {
                 System.out.println("Card5 clicked");
                 playerCard5.setBounds(600, 450, 75, 115);
                 playerCard5.repaint();
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -368,6 +380,8 @@ public class Frame extends JFrame implements ActionListener {
                 System.out.println("Card6 clicked");
                 playerCard6.setBounds(700, 450, 75, 115);
                 playerCard6.repaint();
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -378,6 +392,8 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card7 clicked");
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -388,6 +404,8 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card8 clicked");
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -398,6 +416,8 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card9 clicked");
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -408,6 +428,8 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card10 clicked");
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -418,6 +440,8 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card11 Clicked");
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
@@ -428,6 +452,8 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card12 clicked");
+                GameActions.setPlayerTurn(false);
+                GameActions.cpuTurn();
             }
         });
 
