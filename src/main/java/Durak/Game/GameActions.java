@@ -5,56 +5,83 @@ import lombok.Setter;
 
 import javax.swing.*;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class GameActions {
 
     private static final Random random = new Random();
-    private static List<Card> tableCards = new ArrayList<>();
+    @Getter
+    private static List<Card> table = new ArrayList<>();
     @Getter @Setter
     private static boolean isPlayerTurn;
+    @Getter @Setter
+    private static boolean cpuAttacking;
 
 
-    public static void cpuTurn() {
+public static void checkMoveLegitimacy(){
+    //TODO:
+
+    }
+
+public static void cpuAttack(){
+    cpuAttacking = true;
+    System.out.println("CPU attacking");
+    System.out.println(table);
+
+    //TODO:
+}
+    public static void cpuDefence(){
+    cpuAttacking = false;
+        System.out.println("CPU defending");
+        System.out.println(table);
+
+        //TODO:
+
+    }
+    public static void cpuFirstTurn() {
+
+    cpuAttacking = true;
+
         List<Card> cpuHand = Frame.getCpu().getHand();
         cpuHand.sort(Comparator.comparingInt(Card::getValue));
 
-        boolean allOtherSuitsOut = true;
 
+                if (!isPlayerTurn && !Objects.equals(cpuHand.get(0).getSuit(), Frame.getTrumpSuit())) {
+                    Frame.getCpuCard1().setBounds(200,420,75,115);
+                    Frame.getCpuCard1().repaint();
+                    table.add(cpuHand.get(0));
+                    cpuHand.remove(0);
 
-        for (Card card : cpuHand) {
-            if (!Objects.equals(card.getSuit(), Frame.getTrumpSuit())) {
-                allOtherSuitsOut = false;
-                break;
-            }
-        }
-
-        if (!isPlayerTurn) {
-            if (allOtherSuitsOut) {
-
-                for (int i = 0; i < cpuHand.size(); i++) {
-                    if (Objects.equals(cpuHand.get(i).getSuit(), Frame.getTrumpSuit())) {
-                        tableCards.add(cpuHand.get(i));
-                        cpuHand.remove(i);
-                        break;
-                    }
+                }else if (!isPlayerTurn && !Objects.equals(cpuHand.get(1).getSuit(), Frame.getTrumpSuit()) ) {
+                    Frame.getCpuCard2().setBounds(200,420,75,115);
+                    Frame.getCpuCard2().repaint();
+                    table.add(cpuHand.get(1));
+                    cpuHand.remove(1);
+                }else if (!isPlayerTurn && !Objects.equals(cpuHand.get(2).getSuit(), Frame.getTrumpSuit()) ) {
+                    Frame.getCpuCard3().setBounds(200,420,75,115);
+                    Frame.getCpuCard3().repaint();
+                    table.add(cpuHand.get(2));
+                    cpuHand.remove(2);
+                }else if (!isPlayerTurn && !Objects.equals(cpuHand.get(3).getSuit(), Frame.getTrumpSuit()) ) {
+                    Frame.getCpuCard4().setBounds(200,420,75,115);
+                    Frame.getCpuCard4().repaint();
+                    table.add(cpuHand.get(3));
+                    cpuHand.remove(3);
+                }else if (!isPlayerTurn && !Objects.equals(cpuHand.get(4).getSuit(), Frame.getTrumpSuit()) ) {
+                    Frame.getCpuCard5().setBounds(200,420,75,115);
+                    Frame.getCpuCard5().repaint();
+                    table.add(cpuHand.get(4));
+                    cpuHand.remove(4);
+                }else{
+                    Frame.getCpuCard6().setBounds(200,420,75,115);
+                    Frame.getCpuCard6().repaint();
+                    table.add(cpuHand.get(5));
+                    cpuHand.remove(5);
                 }
-            } else {
 
-                for (int i = 0; i < cpuHand.size(); i++) {
-                    if (!Objects.equals(cpuHand.get(i).getSuit(), Frame.getTrumpSuit())) {
-                        tableCards.add(cpuHand.get(i));
-                        cpuHand.remove(i);
-                        break;
-                    }
-                }
+                setPlayerTurn(true);
             }
-            isPlayerTurn = true;
-            System.out.println(tableCards + "TABLE\n");
-            System.out.println(cpuHand);
-        }
-    }
+
+
     public static void drawTrump() {
 
         Frame.getTrump().setBounds(75,430,100,100);
@@ -120,8 +147,8 @@ public class GameActions {
 
 
     public static void onLosingHand(){
-        for (int i = 0; i < tableCards.size() ; i++) {
-        Frame.getPlayer().getHand().add(tableCards.get(i));
+        for (int i = 0; i < table.size() ; i++) {
+        Frame.getPlayer().getHand().add(table.get(i));
 
         }
     }

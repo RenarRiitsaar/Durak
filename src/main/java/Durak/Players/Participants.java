@@ -4,6 +4,7 @@ import Durak.Game.Card;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -29,6 +30,8 @@ public abstract class Participants {
             Card.getDeck().remove(randomCard);
 
         }
+        hand.sort(Comparator.comparingInt(Card::getValue));
+
     }
 
 }
