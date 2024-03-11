@@ -11,10 +11,16 @@ public class GameActions {
     private static final Random random = new Random();
     @Getter
     private static List<Card> table = new ArrayList<>();
+    @Getter
+    private static List<Card> graveYard = new ArrayList<>();
+    @Getter
+    private static List<Card> killedCards = new ArrayList<>();
     @Getter @Setter
     private static boolean isPlayerTurn;
     @Getter @Setter
     private static boolean cpuAttacking;
+    @Getter @Setter
+    private static boolean noLegalMovesLeft = false;
 
 
 public static void checkMoveLegitimacy(){
@@ -29,14 +35,59 @@ public static void cpuAttack(){
 
     //TODO:
 }
-    public static void cpuDefence(){
-    cpuAttacking = false;
-        System.out.println("CPU defending");
-        System.out.println(table);
+    public static void cpuDefence() {
 
-        //TODO:
+        cpuAttacking = false;
+        List<Card> cpuHand = Frame.getCpu().getHand();
+        Card tableCard = table.get(0);
 
+        for (int i = 0; i < cpuHand.size(); i++) {
+            Card cpuCard = cpuHand.get(i);
+
+            if (canDefend(cpuCard, tableCard)) {
+                cardsKilled(i);
+                break;
+            } else {
+                  noLegalMovesLeft = true;
+
+            }
+        }
     }
+
+    private static boolean canDefend(Card cpuCard, Card tableCard) {
+
+        if (cpuCard.getValue() > tableCard.getValue()) {
+            if(Objects.equals(cpuCard.getSuit(), tableCard.getSuit())) {
+                return true;
+
+            }else if(isTrump(cpuCard) && isTrump(tableCard)){
+                return true;
+            }
+        }else if(cpuCard.getValue() < tableCard.getValue()){
+            if(isTrump(cpuCard) && !isTrump(tableCard)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isTrump(Card card) {
+        return card.getSuit().equals(Frame.getTrumpSuit());
+    }
+
+    private static void cardsKilled(int i) {
+        table.add(Frame.getCpu().getHand().get(i));
+        killedCards.addAll(table);
+        table.clear();
+
+        System.out.println(table + "ON TABLE");
+        System.out.println(killedCards + "KILLED");
+        System.out.println(graveYard + "IN GRAVEYARD");
+        Frame.getCpu().getHand().remove(i);
+        isPlayerTurn = true;
+        noLegalMovesLeft = false;
+    }
+
     public static void cpuFirstTurn() {
 
     cpuAttacking = true;

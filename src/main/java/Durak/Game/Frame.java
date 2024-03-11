@@ -95,7 +95,7 @@ public class Frame extends JFrame implements ActionListener {
 
         if(!GameActions.isPlayerTurn()) {
             GameActions.cpuFirstTurn();
-            GameActions.setCpuAttacking(true);
+            GameActions.setCpuAttacking(false);
         }else{
             GameActions.setCpuAttacking(false);
         }
@@ -325,6 +325,7 @@ public class Frame extends JFrame implements ActionListener {
 
 
     private static void playerCards() {
+
         playerCard1.setBounds(325, 600, 75, 115);
         playerCard1.addMouseListener(new MouseAdapter() {
             @Override
@@ -334,9 +335,13 @@ public class Frame extends JFrame implements ActionListener {
                 playerCard1.setBounds(200, 450, 75, 115);
                 playerCard1.repaint();
 
-                GameActions.getTable().add(player.getHand().get(0));
-                player.getHand().remove(0);
+
+                    GameActions.getTable().add(player.getHand().get(0));
+                    //player.getHand().remove(0);
+
+
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
+                repaintPlayerCards();
 
                 GameActions.setPlayerTurn(false);
 
@@ -360,9 +365,13 @@ public class Frame extends JFrame implements ActionListener {
                 playerCard2.setBounds(300, 450, 75, 115);
                 playerCard2.repaint();
 
-                GameActions.getTable().add(player.getHand().get(1));
-                player.getHand().remove(1);
+
+
+                    GameActions.getTable().add(player.getHand().get(1));
+                 //   player.getHand().remove(1);
+
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
+                repaintPlayerCards();
 
                 GameActions.setPlayerTurn(false);
 
@@ -385,9 +394,12 @@ public class Frame extends JFrame implements ActionListener {
                 playerCard3.setBounds(400, 450, 75, 115);
                 playerCard3.repaint();
 
-                GameActions.getTable().add(player.getHand().get(2));
-                player.getHand().remove(2);
+
+                    GameActions.getTable().add(player.getHand().get(2));
+                   // player.getHand().remove(2);
+
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
+                repaintPlayerCards();
 
                 GameActions.setPlayerTurn(false);
 
@@ -410,9 +422,11 @@ public class Frame extends JFrame implements ActionListener {
                 playerCard4.setBounds(500, 450, 75, 115);
                 playerCard4.repaint();
 
-                GameActions.getTable().add(player.getHand().get(3));
-                player.getHand().remove(3);
+                    GameActions.getTable().add(player.getHand().get(3));
+                  //  player.getHand().remove(3);
+
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
+                repaintPlayerCards();
 
                 GameActions.setPlayerTurn(false);
 
@@ -435,9 +449,14 @@ public class Frame extends JFrame implements ActionListener {
                 playerCard5.setBounds(600, 450, 75, 115);
                 playerCard5.repaint();
 
-                GameActions.getTable().add(player.getHand().get(4));
-                player.getHand().remove(4);
+
+
+                    GameActions.getTable().add(player.getHand().get(4));
+                  //  player.getHand().remove(4);
+
+
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
+                repaintPlayerCards();
 
                 GameActions.setPlayerTurn(false);
 
@@ -460,9 +479,12 @@ public class Frame extends JFrame implements ActionListener {
                 playerCard6.setBounds(700, 450, 75, 115);
                 playerCard6.repaint();
 
-                GameActions.getTable().add(player.getHand().get(5));
-                player.getHand().remove(5);
+                    GameActions.getTable().add(player.getHand().get(5));
+                //    player.getHand().remove(5);
+
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
+                repaintPlayerCards();
+
 
                 GameActions.setPlayerTurn(false);
 
@@ -555,6 +577,7 @@ public class Frame extends JFrame implements ActionListener {
         displayCardImage(playerCard5, player.getHand().get(4).getCardTemplate());
         displayCardImage(playerCard6, player.getHand().get(5).getCardTemplate());
 
+
         int numOfCards = player.getHand().size();
 
 
@@ -587,6 +610,15 @@ public class Frame extends JFrame implements ActionListener {
                     displayCardImage(playerCard12, player.getHand().get(11).getCardTemplate());
             }
         }
+    }
+
+    private static void repaintPlayerCards() {
+        playerCard1.repaint();
+        playerCard2.repaint();
+        playerCard3.repaint();
+        playerCard4.repaint();
+        playerCard5.repaint();
+        playerCard6.repaint();
     }
 
     public static void displayCardImage(JPanel jp, ImageIcon imageIcon) {
