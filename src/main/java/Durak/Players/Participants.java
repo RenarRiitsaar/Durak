@@ -12,7 +12,7 @@ import java.util.Random;
 public abstract class Participants {
 
 @Getter
-    private  List<Card> hand;
+    private List<Card> hand;
 
     Random random = new Random();
 

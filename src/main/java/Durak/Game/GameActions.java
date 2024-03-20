@@ -1,9 +1,11 @@
 package Durak.Game;
 
+import Durak.Players.Participants;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
+import java.awt.event.MouseListener;
 import java.util.*;
 
 public class GameActions {
@@ -21,11 +23,34 @@ public class GameActions {
     private static boolean cpuAttacking;
     @Getter @Setter
     private static boolean noLegalMovesLeft = false;
+    @Getter @Setter
+    private static boolean isFirstCardToTable = true;
+    @Getter @Setter
+    private static boolean matchFound;
 
 
-public static void checkMoveLegitimacy(){
-    //TODO:
+    public static boolean checkValue() {
 
+        matchFound = false;
+
+
+        for (Map.Entry<JPanel, Integer> entry : Frame.getPlayerCards().entrySet()) {
+            Integer cardValue = entry.getValue();
+            JPanel playerCard = entry.getKey();
+
+            for (Card killedCard : killedCards) {
+
+                if (killedCard.getValue() == cardValue) {
+                    matchFound = true;
+
+                }else{
+                   matchFound = false;
+                   playerCard.setEnabled(false);
+                }
+            }
+        }
+
+        return matchFound;
     }
 
 public static void cpuAttack(){
@@ -39,19 +64,31 @@ public static void cpuAttack(){
 
         cpuAttacking = false;
         List<Card> cpuHand = Frame.getCpu().getHand();
-        Card tableCard = table.get(0);
+         Card tableCard = table.get(0);
 
-        for (int i = 0; i < cpuHand.size(); i++) {
-            Card cpuCard = cpuHand.get(i);
 
-            if (canDefend(cpuCard, tableCard)) {
-                cardsKilled(i);
-                break;
-            } else {
-                  noLegalMovesLeft = true;
 
+            for (int i = 0; i < cpuHand.size(); i++) {
+                Card cpuCard = cpuHand.get(i);
+
+                if (canDefend(cpuCard, tableCard)) {
+                    cardsKilled(i);
+                    break;
+                } else {
+                    noLegalMovesLeft = true;
+
+                }
             }
+
+
+        if(noLegalMovesLeft){
+            Frame.getPlayer().getHand().removeAll(killedCards);
+            Frame.getPlayer().getHand().remove(tableCard);
+            onLosingHand(Frame.getCpu());
+            addCard(Frame.getPlayer());
+            isPlayerTurn = true;
         }
+
     }
 
     private static boolean canDefend(Card cpuCard, Card tableCard) {
@@ -62,8 +99,12 @@ public static void cpuAttack(){
 
             }else if(isTrump(cpuCard) && isTrump(tableCard)){
                 return true;
+
+            } else if(isTrump(cpuCard) && !isTrump(tableCard)) {
+                return true;
             }
-        }else if(cpuCard.getValue() < tableCard.getValue()){
+        }
+        if(cpuCard.getValue() < tableCard.getValue()){
             if(isTrump(cpuCard) && !isTrump(tableCard)) {
                 return true;
             }
@@ -197,27 +238,25 @@ public static void cpuAttack(){
 
 
 
-    public static void onLosingHand(){
-        for (int i = 0; i < table.size() ; i++) {
-        Frame.getPlayer().getHand().add(table.get(i));
+    public static void onLosingHand(Participants participant){
 
-        }
+            participant.getHand().addAll(killedCards);
+            participant.getHand().add(table.get(0));
+            participant.getHand().sort(Comparator.comparingInt(Card::getValue));
+
+
     }
 
-    public static void addCard(){
-        if(Frame.getPlayer().getHand().size() < 6){
-            for (int i = Frame.getPlayer().getHand().size(); i < 6  ; i++) {
+    public static void addCard(Participants participant){
+
+        if(participant.getHand().size() < 6){
+            for (int i = participant.getHand().size(); i < 6  ; i++) {
                int randomCard = random.nextInt(Card.getDeck().size());
-                Frame.getPlayer().getHand().add(Card.getDeck().get(randomCard));
+               participant.getHand().add(Card.getDeck().get(randomCard));
                 Card.getDeck().remove(randomCard);
             }
         }
-        if(Frame.getCpu().getHand().size() < 6){
-            for (int i = Frame.getCpu().getHand().size(); i < 6; i++) {
-                int randomCard = random.nextInt(Card.getDeck().size());
-                Frame.getCpu().getHand().add(Card.getDeck().get(randomCard));
-                Card.getDeck().remove(randomCard);
-            }
-        }
+
+        participant.getHand().sort(Comparator.comparingInt(Card::getValue));
     }
 }

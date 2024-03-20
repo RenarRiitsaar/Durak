@@ -12,6 +12,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Frame extends JFrame implements ActionListener {
 
@@ -75,6 +77,8 @@ public class Frame extends JFrame implements ActionListener {
     private static String trumpSuit;
     @Getter
     private static JLabel notification = new JLabel();
+    @Getter
+    private static Map<JPanel, Integer> playerCards = new HashMap<>();
 
 
     public Frame(){
@@ -84,13 +88,12 @@ public class Frame extends JFrame implements ActionListener {
         Card.buildDeck();
 
         player.dealHand();
+        playerCards();
         cpu.dealHand();
-
+        cpuCards();
 
         frameSettings();
         GameActions.drawTrump();
-        playerCards();
-        cpuCards();
         GameActions.checkFirstTurn();
 
         if(!GameActions.isPlayerTurn()) {
@@ -327,32 +330,44 @@ public class Frame extends JFrame implements ActionListener {
     private static void playerCards() {
 
         playerCard1.setBounds(325, 600, 75, 115);
+
         playerCard1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 super.mouseClicked(e);
                 System.out.println("Card1 Clicked");
-                playerCard1.setBounds(200, 450, 75, 115);
-                playerCard1.repaint();
-
-
-                    GameActions.getTable().add(player.getHand().get(0));
-                    //player.getHand().remove(0);
-
 
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
-                repaintPlayerCards();
+
 
                 GameActions.setPlayerTurn(false);
 
-                if(GameActions.isCpuAttacking()){
-                    GameActions.cpuAttack();
-                }else{
-                    GameActions.setCpuAttacking(false);
-                    GameActions.cpuDefence();
+                if (GameActions.getKilledCards().isEmpty()) {
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard1.setBounds(200, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(0));
+                        playerCards.remove(playerCard1);
+                        GameActions.cpuDefence();
+                    }
+                }else if(GameActions.checkValue()){
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard1.setBounds(200, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(0));
+                        playerCards.remove(playerCard1);
+                        GameActions.cpuDefence();
+                    }
+                } else{
+                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
                 }
-
-
             }
         });
 
@@ -362,24 +377,36 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card2 clicked");
-                playerCard2.setBounds(300, 450, 75, 115);
-                playerCard2.repaint();
 
-
-
-                    GameActions.getTable().add(player.getHand().get(1));
-                 //   player.getHand().remove(1);
 
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
-                repaintPlayerCards();
 
                 GameActions.setPlayerTurn(false);
 
-                if(GameActions.isCpuAttacking()){
-                    GameActions.cpuAttack();
-                }else{
-                    GameActions.setCpuAttacking(false);
-                    GameActions.cpuDefence();
+                if (GameActions.getKilledCards().isEmpty()) {
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard2.setBounds(300, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(1));
+                        playerCards.remove(playerCard2);
+                        GameActions.cpuDefence();
+                    }
+                }else if(GameActions.checkValue()){
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard2.setBounds(300, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(1));
+                        playerCards.remove(playerCard2);
+                        GameActions.cpuDefence();
+                    }
+                } else{
+                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
                 }
 
             }
@@ -391,23 +418,37 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card3 clicked");
-                playerCard3.setBounds(400, 450, 75, 115);
-                playerCard3.repaint();
 
-
-                    GameActions.getTable().add(player.getHand().get(2));
-                   // player.getHand().remove(2);
 
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
-                repaintPlayerCards();
+
 
                 GameActions.setPlayerTurn(false);
 
-                if(GameActions.isCpuAttacking()){
-                    GameActions.cpuAttack();
-                }else{
-                    GameActions.setCpuAttacking(false);
-                    GameActions.cpuDefence();
+                if (GameActions.getKilledCards().isEmpty()) {
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard3.setBounds(400, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(2));
+                        playerCards.remove(playerCard3);
+                        GameActions.cpuDefence();
+                    }
+                }else if(GameActions.checkValue()){
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard3.setBounds(400, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(2));
+                        playerCards.remove(playerCard3);
+                        GameActions.cpuDefence();
+                    }
+                } else{
+                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
                 }
 
             }
@@ -417,24 +458,39 @@ public class Frame extends JFrame implements ActionListener {
         playerCard4.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 super.mouseClicked(e);
                 System.out.println("Card4 Clicked");
-                playerCard4.setBounds(500, 450, 75, 115);
-                playerCard4.repaint();
 
-                    GameActions.getTable().add(player.getHand().get(3));
-                  //  player.getHand().remove(3);
 
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
-                repaintPlayerCards();
 
                 GameActions.setPlayerTurn(false);
 
-                if(GameActions.isCpuAttacking()){
-                    GameActions.cpuAttack();
-                }else{
-                    GameActions.setCpuAttacking(false);
-                    GameActions.cpuDefence();
+                if (GameActions.getKilledCards().isEmpty()) {
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard4.setBounds(500, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(3));
+                        playerCards.remove(playerCard4);
+                        GameActions.cpuDefence();
+                    }
+                }else if(GameActions.checkValue()){
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard4.setBounds(500, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(3));
+                        playerCards.remove(playerCard4);
+                        GameActions.cpuDefence();
+                    }
+                } else{
+                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
                 }
 
             }
@@ -446,25 +502,38 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card5 clicked");
-                playerCard5.setBounds(600, 450, 75, 115);
-                playerCard5.repaint();
 
-
-
-                    GameActions.getTable().add(player.getHand().get(4));
-                  //  player.getHand().remove(4);
 
 
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
-                repaintPlayerCards();
+
 
                 GameActions.setPlayerTurn(false);
 
-                if(GameActions.isCpuAttacking()){
-                    GameActions.cpuAttack();
-                }else{
-                    GameActions.setCpuAttacking(false);
-                    GameActions.cpuDefence();
+                if (GameActions.getKilledCards().isEmpty()) {
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard5.setBounds(600, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(4));
+                        playerCards.remove(playerCard5);
+                        GameActions.cpuDefence();
+                    }
+                }else if(GameActions.checkValue()){
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard5.setBounds(600, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(4));
+                        playerCards.remove(playerCard5);
+                        GameActions.cpuDefence();
+                    }
+                } else{
+                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
                 }
 
             }
@@ -476,23 +545,39 @@ public class Frame extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Card6 clicked");
-                playerCard6.setBounds(700, 450, 75, 115);
-                playerCard6.repaint();
 
-                    GameActions.getTable().add(player.getHand().get(5));
-                //    player.getHand().remove(5);
 
                 player.getHand().sort(Comparator.comparingInt(Card::getValue));
-                repaintPlayerCards();
+
 
 
                 GameActions.setPlayerTurn(false);
 
-                if(GameActions.isCpuAttacking()){
-                    GameActions.cpuAttack();
-                }else{
-                    GameActions.setCpuAttacking(false);
-                    GameActions.cpuDefence();
+                if (GameActions.getKilledCards().isEmpty()) {
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard6.setBounds(700, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(5));
+                        playerCards.remove(playerCard6);
+                        GameActions.cpuDefence();
+                    }
+                }else if(GameActions.checkValue()){
+
+                    if (GameActions.isCpuAttacking()) {
+                        GameActions.cpuAttack();
+                    } else {
+                        GameActions.setCpuAttacking(false);
+                        playerCard6.setBounds(700, 450, 75, 115);
+                        GameActions.getTable().add(player.getHand().get(5));
+                        playerCards.remove(playerCard6);
+                        GameActions.cpuDefence();
+                    }
+                } else{
+                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
+
                 }
 
             }
@@ -610,6 +695,21 @@ public class Frame extends JFrame implements ActionListener {
                     displayCardImage(playerCard12, player.getHand().get(11).getCardTemplate());
             }
         }
+
+
+        playerCards.put(playerCard1, player.getHand().get(0).getValue());
+        playerCards.put(playerCard2, player.getHand().get(1).getValue());
+        playerCards.put(playerCard3, player.getHand().get(2).getValue());
+        playerCards.put(playerCard4, player.getHand().get(3).getValue());
+        playerCards.put(playerCard5, player.getHand().get(4).getValue());
+        playerCards.put(playerCard6, player.getHand().get(5).getValue());
+       // playerCards.put(playerCard7, player.getHand().get(6).getValue());
+       // playerCards.put(playerCard8, player.getHand().get(7).getValue());
+        //playerCards.put(playerCard9, player.getHand().get(8).getValue());
+        //playerCards.put(playerCard10, player.getHand().get(9).getValue());
+        //playerCards.put(playerCard11, player.getHand().get(10).getValue());
+        //playerCards.put(playerCard12, player.getHand().get(11).getValue());
+
     }
 
     private static void repaintPlayerCards() {
