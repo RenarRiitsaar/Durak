@@ -11,7 +11,6 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,7 +77,8 @@ public class Frame extends JFrame implements ActionListener {
     @Getter
     private static JLabel notification = new JLabel();
     @Getter
-    private static Map<JPanel, Integer> playerCards = new HashMap<>();
+    private static Map<JPanel, Card> playerCards = new HashMap<>();
+
 
 
     public Frame(){
@@ -101,6 +101,7 @@ public class Frame extends JFrame implements ActionListener {
             GameActions.setCpuAttacking(false);
         }else{
             GameActions.setCpuAttacking(false);
+
         }
     }
 
@@ -327,261 +328,147 @@ public class Frame extends JFrame implements ActionListener {
     }
 
 
-    private static void playerCards() {
+    static void playerCards() {
 
         playerCard1.setBounds(325, 600, 75, 115);
+            playerCard1.addMouseListener(new MouseAdapter() {
 
-        playerCard1.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                super.mouseClicked(e);
-                System.out.println("Card1 Clicked");
-
-                player.getHand().sort(Comparator.comparingInt(Card::getValue));
-
-
-                GameActions.setPlayerTurn(false);
-
-                if (GameActions.getKilledCards().isEmpty()) {
+               @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    GameActions.checkValue();
 
                     if (GameActions.isCpuAttacking()) {
                         GameActions.cpuAttack();
-                    } else {
-                        GameActions.setCpuAttacking(false);
-                        playerCard1.setBounds(200, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(0));
-                        playerCards.remove(playerCard1);
-                        GameActions.cpuDefence();
                     }
-                }else if(GameActions.checkValue()){
+                    if(playerCard1.isEnabled()){
 
-                    if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
-                    } else {
                         GameActions.setCpuAttacking(false);
                         playerCard1.setBounds(200, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(0));
+                        GameActions.getTable().add(playerCards.get(playerCard1));
                         playerCards.remove(playerCard1);
+                        GameActions.setPlayerTurn(false);
                         GameActions.cpuDefence();
                     }
-                } else{
-                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
                 }
-            }
-        });
+            });
 
         playerCard2.setBounds(375, 600, 75, 115);
-        playerCard2.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                System.out.println("Card2 clicked");
-
-
-                player.getHand().sort(Comparator.comparingInt(Card::getValue));
-
-                GameActions.setPlayerTurn(false);
-
-                if (GameActions.getKilledCards().isEmpty()) {
+            playerCard2.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    GameActions.checkValue();
 
                     if (GameActions.isCpuAttacking()) {
                         GameActions.cpuAttack();
-                    } else {
-                        GameActions.setCpuAttacking(false);
-                        playerCard2.setBounds(300, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(1));
-                        playerCards.remove(playerCard2);
-                        GameActions.cpuDefence();
                     }
-                }else if(GameActions.checkValue()){
 
-                    if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
-                    } else {
+                    if(playerCard2.isEnabled()) {
                         GameActions.setCpuAttacking(false);
                         playerCard2.setBounds(300, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(1));
+                        GameActions.getTable().add(playerCards.get(playerCard2));
                         playerCards.remove(playerCard2);
+                        GameActions.setPlayerTurn(false);
                         GameActions.cpuDefence();
                     }
-                } else{
-                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
                 }
-
-            }
-        });
+            });
 
         playerCard3.setBounds(425, 600, 75, 115);
-        playerCard3.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                System.out.println("Card3 clicked");
-
-
-                player.getHand().sort(Comparator.comparingInt(Card::getValue));
-
-
-                GameActions.setPlayerTurn(false);
-
-                if (GameActions.getKilledCards().isEmpty()) {
+            playerCard3.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    GameActions.checkValue();
 
                     if (GameActions.isCpuAttacking()) {
                         GameActions.cpuAttack();
-                    } else {
-                        GameActions.setCpuAttacking(false);
-                        playerCard3.setBounds(400, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(2));
-                        playerCards.remove(playerCard3);
-                        GameActions.cpuDefence();
                     }
-                }else if(GameActions.checkValue()){
 
-                    if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
-                    } else {
+                    if(playerCard3.isEnabled()) {
                         GameActions.setCpuAttacking(false);
                         playerCard3.setBounds(400, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(2));
+                        GameActions.getTable().add(playerCards.get(playerCard3));
                         playerCards.remove(playerCard3);
+                        GameActions.setPlayerTurn(false);
                         GameActions.cpuDefence();
+
                     }
-                } else{
-                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
                 }
+            });
 
-            }
-        });
 
         playerCard4.setBounds(475, 600, 75, 115);
-        playerCard4.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                super.mouseClicked(e);
-                System.out.println("Card4 Clicked");
-
-
-                player.getHand().sort(Comparator.comparingInt(Card::getValue));
-
-                GameActions.setPlayerTurn(false);
-
-                if (GameActions.getKilledCards().isEmpty()) {
+            playerCard4.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    GameActions.checkValue();
 
                     if (GameActions.isCpuAttacking()) {
                         GameActions.cpuAttack();
-                    } else {
+                    }
+
+                    if(playerCard4.isEnabled()) {
+
                         GameActions.setCpuAttacking(false);
                         playerCard4.setBounds(500, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(3));
+                        GameActions.getTable().add(playerCards.get(playerCard4));
                         playerCards.remove(playerCard4);
+                        GameActions.setPlayerTurn(false);
                         GameActions.cpuDefence();
-                    }
-                }else if(GameActions.checkValue()){
 
-                    if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
-                    } else {
-                        GameActions.setCpuAttacking(false);
-                        playerCard4.setBounds(500, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(3));
-                        playerCards.remove(playerCard4);
-                        GameActions.cpuDefence();
+
                     }
-                } else{
-                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
                 }
+            });
 
-            }
-        });
+            playerCard5.setBounds(525, 600, 75, 115);
+            playerCard5.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    GameActions.checkValue();
 
-        playerCard5.setBounds(525, 600, 75, 115);
-        playerCard5.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                System.out.println("Card5 clicked");
-
-
-
-                player.getHand().sort(Comparator.comparingInt(Card::getValue));
-
-
-                GameActions.setPlayerTurn(false);
-
-                if (GameActions.getKilledCards().isEmpty()) {
-
-                    if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
-                    } else {
-                        GameActions.setCpuAttacking(false);
-                        playerCard5.setBounds(600, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(4));
-                        playerCards.remove(playerCard5);
-                        GameActions.cpuDefence();
-                    }
-                }else if(GameActions.checkValue()){
-
-                    if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
-                    } else {
-                        GameActions.setCpuAttacking(false);
-                        playerCard5.setBounds(600, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(4));
-                        playerCards.remove(playerCard5);
-                        GameActions.cpuDefence();
-                    }
-                } else{
-                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
+                        if (GameActions.isCpuAttacking()) {
+                            GameActions.cpuAttack();
+                        }
+                        if(playerCard5.isEnabled()) {
+                            GameActions.setCpuAttacking(false);
+                            playerCard5.setBounds(600, 450, 75, 115);
+                            GameActions.getTable().add(playerCards.get(playerCard5));
+                            playerCards.remove(playerCard5);
+                            GameActions.setPlayerTurn(false);
+                            GameActions.cpuDefence();
+                        }
                 }
-
-            }
-        });
-
-        playerCard6.setBounds(575, 600, 75, 115);
-        playerCard6.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                System.out.println("Card6 clicked");
-
-
-                player.getHand().sort(Comparator.comparingInt(Card::getValue));
+            });
 
 
 
-                GameActions.setPlayerTurn(false);
-
-                if (GameActions.getKilledCards().isEmpty()) {
+            playerCard6.setBounds(575, 600, 75, 115);
+            playerCard6.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    GameActions.checkValue();
 
                     if (GameActions.isCpuAttacking()) {
                         GameActions.cpuAttack();
-                    } else {
+                    }
+
+                    if (playerCard6.isEnabled()) {
                         GameActions.setCpuAttacking(false);
                         playerCard6.setBounds(700, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(5));
+                        GameActions.getTable().add(playerCards.get(playerCard6));
                         playerCards.remove(playerCard6);
+                        GameActions.setPlayerTurn(false);
                         GameActions.cpuDefence();
                     }
-                }else if(GameActions.checkValue()){
-
-                    if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
-                    } else {
-                        GameActions.setCpuAttacking(false);
-                        playerCard6.setBounds(700, 450, 75, 115);
-                        GameActions.getTable().add(player.getHand().get(5));
-                        playerCards.remove(playerCard6);
-                        GameActions.cpuDefence();
-                    }
-                } else{
-                    JOptionPane.showMessageDialog(null, "Table doesn't contain card with that value");
-
                 }
+            });
 
-            }
-        });
 
         playerCard7.setBounds(325, 650, 75, 115);
         playerCard7.setVisible(false);
@@ -594,6 +481,7 @@ public class Frame extends JFrame implements ActionListener {
 
             }
         });
+
 
         playerCard8.setBounds(375, 650, 75, 115);
         playerCard8.setVisible(false);
@@ -697,12 +585,12 @@ public class Frame extends JFrame implements ActionListener {
         }
 
 
-        playerCards.put(playerCard1, player.getHand().get(0).getValue());
-        playerCards.put(playerCard2, player.getHand().get(1).getValue());
-        playerCards.put(playerCard3, player.getHand().get(2).getValue());
-        playerCards.put(playerCard4, player.getHand().get(3).getValue());
-        playerCards.put(playerCard5, player.getHand().get(4).getValue());
-        playerCards.put(playerCard6, player.getHand().get(5).getValue());
+        playerCards.put(playerCard1, player.getHand().get(0));
+        playerCards.put(playerCard2, player.getHand().get(1));
+        playerCards.put(playerCard3, player.getHand().get(2));
+        playerCards.put(playerCard4, player.getHand().get(3));
+        playerCards.put(playerCard5, player.getHand().get(4));
+        playerCards.put(playerCard6, player.getHand().get(5));
        // playerCards.put(playerCard7, player.getHand().get(6).getValue());
        // playerCards.put(playerCard8, player.getHand().get(7).getValue());
         //playerCards.put(playerCard9, player.getHand().get(8).getValue());

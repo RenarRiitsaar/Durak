@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
-import java.awt.event.MouseListener;
 import java.util.*;
 
 public class GameActions {
@@ -28,30 +27,26 @@ public class GameActions {
     @Getter @Setter
     private static boolean matchFound;
 
+//MAP TABLE
+    public static void checkValue() {
 
-    public static boolean checkValue() {
-
-        matchFound = false;
-
-
-        for (Map.Entry<JPanel, Integer> entry : Frame.getPlayerCards().entrySet()) {
-            Integer cardValue = entry.getValue();
+        for (Map.Entry<JPanel, Card> entry : Frame.getPlayerCards().entrySet()) {
+            int cardValue = entry.getValue().getValue();
             JPanel playerCard = entry.getKey();
 
             for (Card killedCard : killedCards) {
 
                 if (killedCard.getValue() == cardValue) {
-                    matchFound = true;
+                    playerCard.setEnabled(true);
+                    break;
 
-                }else{
-                   matchFound = false;
-                   playerCard.setEnabled(false);
+                } else {
+                    playerCard.setEnabled(false);
                 }
             }
         }
-
-        return matchFound;
     }
+
 
 public static void cpuAttack(){
     cpuAttacking = true;
@@ -88,7 +83,6 @@ public static void cpuAttack(){
             addCard(Frame.getPlayer());
             isPlayerTurn = true;
         }
-
     }
 
     private static boolean canDefend(Card cpuCard, Card tableCard) {
