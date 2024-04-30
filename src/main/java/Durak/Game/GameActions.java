@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.Timer;
 
 public class GameActions {
 
@@ -26,8 +28,10 @@ public class GameActions {
     private static boolean isFirstCardToTable = true;
     @Getter @Setter
     private static boolean matchFound;
+    @Getter @Setter
+    private static Map<Card, Card> tableCards = new HashMap<>();
 
-//MAP TABLE
+
     public static void checkValue() {
 
         for (Map.Entry<JPanel, Card> entry : Frame.getPlayerCards().entrySet()) {
@@ -43,6 +47,24 @@ public class GameActions {
                 } else {
                     playerCard.setEnabled(false);
                 }
+            }
+            if(Frame.getPlayerCard1().getX() != 325){
+                Frame.getPlayerCard1().setEnabled(false);
+            }
+            if(Frame.getPlayerCard2().getX() != 375){
+                Frame.getPlayerCard2().setEnabled(false);
+            }
+            if(Frame.getPlayerCard3().getX() != 425){
+               Frame.getPlayerCard3().setEnabled(false);
+            }
+            if(Frame.getPlayerCard4().getX() != 475){
+                Frame.getPlayerCard4().setEnabled(false);
+            }
+            if(Frame.getPlayerCard5().getX() != 525){
+                Frame.getPlayerCard5().setEnabled(false);
+            }
+            if(Frame.getPlayerCard6().getX() != 575){
+                Frame.getPlayerCard6().setEnabled(false);
             }
         }
     }
@@ -68,38 +90,83 @@ public static void cpuAttack(){
 
                 if (canDefend(cpuCard, tableCard)) {
                     cardsKilled(i);
+
+                        JPanel getCpuCard = null;
+                        JPanel getPlayerCard = null;
+                        for (Map.Entry<JPanel, Card> entry : Frame.getCpuCards().entrySet()) {
+                            if (entry.getValue().equals(cpuCard)) {
+                                getCpuCard = entry.getKey();
+                                break;
+                            }
+                        }
+                        for (Map.Entry<JPanel, Card> entry2 : Frame.getPlayerCards().entrySet()) {
+                            if (entry2.getValue().equals(tableCard)) {
+                                getPlayerCard = entry2.getKey();
+                                break;
+                            }
+                        }
+
+
+                        getCpuCard.setBounds(getPlayerCard.getX(), getPlayerCard.getY() + 30, getPlayerCard.getWidth(), getPlayerCard.getHeight());
+                        table.clear();
                     break;
                 } else {
                     noLegalMovesLeft = true;
-
                 }
             }
 
-
         if(noLegalMovesLeft){
+
             Frame.getPlayer().getHand().removeAll(killedCards);
             Frame.getPlayer().getHand().remove(tableCard);
             onLosingHand(Frame.getCpu());
             addCard(Frame.getPlayer());
-            isPlayerTurn = true;
+            killedCards.clear();
+            table.clear();
+            setPlayerTurn(true);
+
+            Frame.getNotification().setText("CPU lost the hand.");
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask(){
+                @Override
+                public void run(){
+                    Frame.getNotification().setText("Player turn.");
+                }
+            }, 1500);
+
+
+            noLegalMovesLeft = false;
+            Frame.restartTurn();
         }
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask(){
+            @Override
+            public void run(){
+                checkValue();
+            }
+        }, 3000);
+        
     }
 
-    private static boolean canDefend(Card cpuCard, Card tableCard) {
 
-        if (cpuCard.getValue() > tableCard.getValue()) {
-            if(Objects.equals(cpuCard.getSuit(), tableCard.getSuit())) {
+
+    public static boolean canDefend(Card card, Card tableCard) {
+
+        if (card.getValue() > tableCard.getValue()) {
+            if(Objects.equals(card.getSuit(), tableCard.getSuit())) {
                 return true;
 
-            }else if(isTrump(cpuCard) && isTrump(tableCard)){
+            }else if(isTrump(card) && isTrump(tableCard)){
                 return true;
 
-            } else if(isTrump(cpuCard) && !isTrump(tableCard)) {
+            } else if(isTrump(card) && !isTrump(tableCard)) {
                 return true;
             }
         }
-        if(cpuCard.getValue() < tableCard.getValue()){
-            if(isTrump(cpuCard) && !isTrump(tableCard)) {
+        if(card.getValue() < tableCard.getValue()){
+            if(isTrump(card) && !isTrump(tableCard)) {
                 return true;
             }
         }
@@ -112,14 +179,13 @@ public static void cpuAttack(){
 
     private static void cardsKilled(int i) {
         table.add(Frame.getCpu().getHand().get(i));
+        Frame.getCpu().getHand().remove(i);
         killedCards.addAll(table);
-        table.clear();
 
         System.out.println(table + "ON TABLE");
         System.out.println(killedCards + "KILLED");
         System.out.println(graveYard + "IN GRAVEYARD");
-        Frame.getCpu().getHand().remove(i);
-        isPlayerTurn = true;
+       setPlayerTurn(true);
         noLegalMovesLeft = false;
     }
 
@@ -164,7 +230,7 @@ public static void cpuAttack(){
                     cpuHand.remove(5);
                 }
 
-                setPlayerTurn(true);
+
             }
 
 
@@ -219,11 +285,11 @@ public static void cpuAttack(){
 
 
         if(playerTrumpMinValue < cpuTrumpMinValue && playerTrumpMinValue != 0){
-            isPlayerTurn = true;
+            setPlayerTurn(true);
             Frame.getNotification().setText("Player starts the game!");
 
         }else{
-            isPlayerTurn = false;
+            setPlayerTurn(false);
             Frame.getNotification().setText("CPU starts the game!");
         }
 
@@ -252,5 +318,6 @@ public static void cpuAttack(){
         }
 
         participant.getHand().sort(Comparator.comparingInt(Card::getValue));
+        Frame.getCardsLeft().setText(String.valueOf(Card.getDeck().size()));
     }
 }

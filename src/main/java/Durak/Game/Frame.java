@@ -13,6 +13,10 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static Durak.Game.GameActions.*;
 
 public class Frame extends JFrame implements ActionListener {
 
@@ -77,7 +81,16 @@ public class Frame extends JFrame implements ActionListener {
     @Getter
     private static JLabel notification = new JLabel();
     @Getter
+    private static JLabel cardsLeft = new JLabel();
+    @Getter
+    private static JLabel graveYardCards = new JLabel();
+    @Getter
     private static Map<JPanel, Card> playerCards = new HashMap<>();
+    @Getter
+    private static Map<JPanel, Card> cpuCards = new HashMap<>();
+
+    private final JButton testButton = new JButton("test");
+    private final JButton endTurn = new JButton("End turn");
 
 
 
@@ -88,21 +101,156 @@ public class Frame extends JFrame implements ActionListener {
         Card.buildDeck();
 
         player.dealHand();
-        playerCards();
         cpu.dealHand();
-        cpuCards();
+
 
         frameSettings();
         GameActions.drawTrump();
+        cpuCards();
+        playerCards();
         GameActions.checkFirstTurn();
+
+
 
         if(!GameActions.isPlayerTurn()) {
             GameActions.cpuFirstTurn();
-            GameActions.setCpuAttacking(false);
+            GameActions.setCpuAttacking(true);
         }else{
+            GameActions.setPlayerTurn(true);
             GameActions.setCpuAttacking(false);
 
         }
+    }
+
+    public static void checkEndTurn(){
+
+        try {
+            Thread.sleep(3000);
+            int disabledCardCount = 0;
+            for (Map.Entry<JPanel, Card> entry : Frame.getPlayerCards().entrySet()) {
+
+
+                if (!entry.getKey().isEnabled()) {
+                    disabledCardCount++;
+                }
+            }
+
+
+            if (disabledCardCount == 6 || GameActions.getKilledCards().size() >= 12) {
+
+                player.getHand().removeAll(getKilledCards());
+                cpu.getHand().removeAll(getKilledCards());
+                addCard(player);
+                addCard(cpu);
+                getGraveYard().addAll(getKilledCards());
+                getKilledCards().clear();
+                restartTurn();
+                notification.setText("No cards left to add!");
+                graveYardCards.setText("In graveyard: " + GameActions.getGraveYard().size());
+
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        notification.setText("CPU turn.");
+                    }
+                }, 1500);
+
+                GameActions.setPlayerTurn(false);
+                cpuAttack();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void restartTurn(){
+
+        playerCard1.removeAll();
+        playerCard1.setBounds(325, 600, 75, 115);
+        displayCardImage(playerCard1, player.getHand().get(0).getCardTemplate());
+        playerCard1.repaint();
+        playerCard1.revalidate();
+
+        playerCard2.removeAll();
+        playerCard2.setBounds(375, 600, 75, 115);
+        displayCardImage(playerCard2, player.getHand().get(1).getCardTemplate());
+        playerCard2.repaint();
+        playerCard2.revalidate();
+
+        playerCard3.removeAll();
+        playerCard3.setBounds(425, 600, 75, 115);
+        displayCardImage(playerCard3, player.getHand().get(2).getCardTemplate());
+        playerCard3.repaint();
+        playerCard3.revalidate();
+
+        playerCard4.removeAll();
+        playerCard4.setBounds(475, 600, 75, 115);
+        displayCardImage(playerCard4, player.getHand().get(3).getCardTemplate());
+        playerCard4.repaint();
+        playerCard4.revalidate();
+
+        playerCard5.removeAll();
+        playerCard5.setBounds(525, 600, 75, 115);
+        displayCardImage(playerCard5, player.getHand().get(4).getCardTemplate());
+        playerCard5.repaint();
+        playerCard5.revalidate();
+
+        playerCard6.removeAll();
+        playerCard6.setBounds(575, 600, 75, 115);
+        displayCardImage(playerCard6, player.getHand().get(5).getCardTemplate());
+        playerCard6.repaint();
+        playerCard6.revalidate();
+
+        playerCards.clear();
+        mapPlayerCards();
+
+        for(Map.Entry<JPanel, Card> panel : playerCards.entrySet()){
+            panel.getKey().setEnabled(true);
+
+        }
+
+
+        cpuCard1.removeAll();
+        cpuCard1.setBounds(325, 200, 75, 115);
+        displayCardImage(cpuCard1, cpu.getHand().get(0).getCardTemplate());
+        cpuCard1.repaint();
+        cpuCard1.revalidate();
+
+        cpuCard2.removeAll();
+        cpuCard2.setBounds(375, 200, 75, 115);
+        displayCardImage(cpuCard2, cpu.getHand().get(1).getCardTemplate());
+        cpuCard2.repaint();
+        cpuCard2.revalidate();
+
+        cpuCard3.removeAll();
+        cpuCard3.setBounds(425, 200, 75, 115);
+        displayCardImage(cpuCard3, cpu.getHand().get(2).getCardTemplate());
+        cpuCard3.repaint();
+        cpuCard3.revalidate();
+
+        cpuCard4.removeAll();
+        cpuCard4.setBounds(475, 200, 75, 115);
+        displayCardImage(cpuCard4, cpu.getHand().get(3).getCardTemplate());
+        cpuCard4.repaint();
+        cpuCard4.revalidate();
+
+        cpuCard5.removeAll();
+        cpuCard5.setBounds(525, 200, 75, 115);
+        displayCardImage(cpuCard5, cpu.getHand().get(4).getCardTemplate());
+        cpuCard5.repaint();
+        cpuCard5.revalidate();
+
+        cpuCard6.removeAll();
+        cpuCard6.setBounds(575, 200, 75, 115);
+        displayCardImage(cpuCard6, cpu.getHand().get(5).getCardTemplate());
+        cpuCard6.repaint();
+        cpuCard6.revalidate();
+
+        cpuCards.clear();
+        mapCpuCards();
+
+
     }
 
     private void frameSettings() {
@@ -112,27 +260,35 @@ public class Frame extends JFrame implements ActionListener {
         this.setLayout(null);
         this.setVisible(true);
 
+        testButton.setBounds(825, 450, 100, 50);
+        testButton.addActionListener(this);
+
+        endTurn.setBounds(825, 400, 100, 50);
+        endTurn.addActionListener(this);
+
         notification.setFont(new Font("MV Boli", Font.BOLD,30));
         notification.setText("");
         notification.setBounds(300, 100, 1000, 100);
         notification.setVisible(true);
 
+        cardsLeft.setFont(new Font("MV Boli", Font.BOLD,30));
+        cardsLeft.setText(String.valueOf(Card.getDeck().size()));
+        cardsLeft.setBounds(60,350,100,100);
+        cardsLeft.setVisible(true);
+
+        graveYardCards.setFont(new Font("MV Boli", Font.BOLD,30));
+        graveYardCards.setText("In graveyard: " + GameActions.getGraveYard().size());
+        graveYardCards.setBounds(30,600,300,100);
+        graveYardCards.setVisible(true);
+
+        this.add(cardsLeft);
+        this.add(graveYardCards);
+        this.add(endTurn);
+        this.add(testButton);
         this.add(notification);
         this.add(cardPack);
-        this.add(playerCard12);
-        this.add(playerCard11);
-        this.add(playerCard10);
-        this.add(playerCard9);
-        this.add(playerCard8);
-        this.add(playerCard7);
-        this.add(playerCard6);
-        this.add(playerCard5);
-        this.add(playerCard4);
-        this.add(playerCard3);
-        this.add(playerCard2);
-        this.add(playerCard1);
-
         this.add(trump);
+
         this.add(cpuCard12);
         this.add(cpuCard11);
         this.add(cpuCard10);
@@ -145,6 +301,18 @@ public class Frame extends JFrame implements ActionListener {
         this.add(cpuCard3);
         this.add(cpuCard2);
         this.add(cpuCard1);
+        this.add(playerCard12);
+        this.add(playerCard11);
+        this.add(playerCard10);
+        this.add(playerCard9);
+        this.add(playerCard8);
+        this.add(playerCard7);
+        this.add(playerCard6);
+        this.add(playerCard5);
+        this.add(playerCard4);
+        this.add(playerCard3);
+        this.add(playerCard2);
+        this.add(playerCard1);
     }
 
     public static ImageIcon rotateIcon(ImageIcon icon, double angle) {
@@ -325,11 +493,20 @@ public class Frame extends JFrame implements ActionListener {
                     displayCardImage(cpuCard12, cpu.getHand().get(11).getCardTemplate());
             }
         }
+        mapCpuCards();
+    }
+
+    private static void mapCpuCards() {
+        cpuCards.put(cpuCard1, cpu.getHand().get(0));
+        cpuCards.put(cpuCard2, cpu.getHand().get(1));
+        cpuCards.put(cpuCard3, cpu.getHand().get(2));
+        cpuCards.put(cpuCard4, cpu.getHand().get(3));
+        cpuCards.put(cpuCard5, cpu.getHand().get(4));
+        cpuCards.put(cpuCard6, cpu.getHand().get(5));
     }
 
 
     static void playerCards() {
-
         playerCard1.setBounds(325, 600, 75, 115);
             playerCard1.addMouseListener(new MouseAdapter() {
 
@@ -338,15 +515,16 @@ public class Frame extends JFrame implements ActionListener {
                     super.mouseClicked(e);
                     GameActions.checkValue();
 
-                    if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
+                    if (playerCard1.isEnabled() && !isPlayerTurn()) {
+                        if(GameActions.canDefend(playerCards.get(playerCard1), getTable().get(0))){
+                            
+                        }
                     }
-                    if(playerCard1.isEnabled()){
-
+                    if(playerCard1.isEnabled() && isPlayerTurn()){
+                        playerCard1.setEnabled(false);
                         GameActions.setCpuAttacking(false);
                         playerCard1.setBounds(200, 450, 75, 115);
-                        GameActions.getTable().add(playerCards.get(playerCard1));
-                        playerCards.remove(playerCard1);
+                       GameActions.getTable().add(playerCards.get(playerCard1));
                         GameActions.setPlayerTurn(false);
                         GameActions.cpuDefence();
                     }
@@ -361,16 +539,17 @@ public class Frame extends JFrame implements ActionListener {
                     GameActions.checkValue();
 
                     if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
+                        cpuAttack();
                     }
 
-                    if(playerCard2.isEnabled()) {
+                    if(playerCard2.isEnabled() && isPlayerTurn()) {
                         GameActions.setCpuAttacking(false);
                         playerCard2.setBounds(300, 450, 75, 115);
                         GameActions.getTable().add(playerCards.get(playerCard2));
-                        playerCards.remove(playerCard2);
                         GameActions.setPlayerTurn(false);
+                        playerCard2.setEnabled(false);
                         GameActions.cpuDefence();
+
                     }
                 }
             });
@@ -383,15 +562,16 @@ public class Frame extends JFrame implements ActionListener {
                     GameActions.checkValue();
 
                     if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
+                        cpuAttack();
                     }
 
-                    if(playerCard3.isEnabled()) {
+                    if(playerCard3.isEnabled() && isPlayerTurn()) {
+
                         GameActions.setCpuAttacking(false);
                         playerCard3.setBounds(400, 450, 75, 115);
                         GameActions.getTable().add(playerCards.get(playerCard3));
-                        playerCards.remove(playerCard3);
                         GameActions.setPlayerTurn(false);
+                        playerCard3.setEnabled(false);
                         GameActions.cpuDefence();
 
                     }
@@ -407,19 +587,17 @@ public class Frame extends JFrame implements ActionListener {
                     GameActions.checkValue();
 
                     if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
+                        cpuAttack();
                     }
 
-                    if(playerCard4.isEnabled()) {
+                    if(playerCard4.isEnabled() && isPlayerTurn()) {
 
                         GameActions.setCpuAttacking(false);
                         playerCard4.setBounds(500, 450, 75, 115);
                         GameActions.getTable().add(playerCards.get(playerCard4));
-                        playerCards.remove(playerCard4);
                         GameActions.setPlayerTurn(false);
+                        playerCard4.setEnabled(false);
                         GameActions.cpuDefence();
-
-
                     }
                 }
             });
@@ -432,14 +610,15 @@ public class Frame extends JFrame implements ActionListener {
                     GameActions.checkValue();
 
                         if (GameActions.isCpuAttacking()) {
-                            GameActions.cpuAttack();
+                            cpuAttack();
                         }
-                        if(playerCard5.isEnabled()) {
+                        if(playerCard5.isEnabled() && isPlayerTurn()) {
+
                             GameActions.setCpuAttacking(false);
                             playerCard5.setBounds(600, 450, 75, 115);
                             GameActions.getTable().add(playerCards.get(playerCard5));
-                            playerCards.remove(playerCard5);
                             GameActions.setPlayerTurn(false);
+                            playerCard5.setEnabled(false);
                             GameActions.cpuDefence();
                         }
                 }
@@ -454,17 +633,21 @@ public class Frame extends JFrame implements ActionListener {
                     super.mouseClicked(e);
                     GameActions.checkValue();
 
+
+
                     if (GameActions.isCpuAttacking()) {
-                        GameActions.cpuAttack();
+                        cpuAttack();
                     }
 
-                    if (playerCard6.isEnabled()) {
+                    if (playerCard6.isEnabled() && isPlayerTurn()) {
+
                         GameActions.setCpuAttacking(false);
                         playerCard6.setBounds(700, 450, 75, 115);
                         GameActions.getTable().add(playerCards.get(playerCard6));
-                        playerCards.remove(playerCard6);
                         GameActions.setPlayerTurn(false);
+                        playerCard6.setEnabled(false);
                         GameActions.cpuDefence();
+
                     }
                 }
             });
@@ -585,28 +768,18 @@ public class Frame extends JFrame implements ActionListener {
         }
 
 
+        mapPlayerCards();
+
+
+    }
+
+    static void mapPlayerCards() {
         playerCards.put(playerCard1, player.getHand().get(0));
         playerCards.put(playerCard2, player.getHand().get(1));
         playerCards.put(playerCard3, player.getHand().get(2));
         playerCards.put(playerCard4, player.getHand().get(3));
         playerCards.put(playerCard5, player.getHand().get(4));
         playerCards.put(playerCard6, player.getHand().get(5));
-       // playerCards.put(playerCard7, player.getHand().get(6).getValue());
-       // playerCards.put(playerCard8, player.getHand().get(7).getValue());
-        //playerCards.put(playerCard9, player.getHand().get(8).getValue());
-        //playerCards.put(playerCard10, player.getHand().get(9).getValue());
-        //playerCards.put(playerCard11, player.getHand().get(10).getValue());
-        //playerCards.put(playerCard12, player.getHand().get(11).getValue());
-
-    }
-
-    private static void repaintPlayerCards() {
-        playerCard1.repaint();
-        playerCard2.repaint();
-        playerCard3.repaint();
-        playerCard4.repaint();
-        playerCard5.repaint();
-        playerCard6.repaint();
     }
 
     public static void displayCardImage(JPanel jp, ImageIcon imageIcon) {
@@ -621,5 +794,31 @@ public class Frame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        if(e.getSource() == testButton){
+            for(Map.Entry<JPanel, Card> card : playerCards.entrySet()){
+                System.out.println(card.getKey() + "is enabled: " + card.getKey().isEnabled());
+            }
+
+            System.out.println("Is player turn?: " + GameActions.isPlayerTurn());
+        }
+
+        if(e.getSource() == endTurn) {
+
+            if (isPlayerTurn()) {
+                player.getHand().removeAll(getKilledCards());
+                cpu.getHand().removeAll(getKilledCards());
+                addCard(player);
+                addCard(cpu);
+                getGraveYard().addAll(getKilledCards());
+                getKilledCards().clear();
+                restartTurn();
+                graveYardCards.setText("In graveyard: " + GameActions.getGraveYard().size());
+                notification.setText("CPU turn.");
+                GameActions.setPlayerTurn(false);
+                cpuAttack();
+            } else {
+                JOptionPane.showMessageDialog(null, "It's CPU turn", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
