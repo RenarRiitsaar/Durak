@@ -28,8 +28,6 @@ public class GameActions {
     private static boolean isFirstCardToTable = true;
     @Getter @Setter
     private static boolean matchFound;
-    @Getter @Setter
-    private static Map<Card, Card> tableCards = new HashMap<>();
 
 
     public static void checkValue() {

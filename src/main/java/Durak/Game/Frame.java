@@ -517,7 +517,7 @@ public class Frame extends JFrame implements ActionListener {
 
                     if (playerCard1.isEnabled() && !isPlayerTurn()) {
                         if(GameActions.canDefend(playerCards.get(playerCard1), getTable().get(0))){
-                            
+
                         }
                     }
                     if(playerCard1.isEnabled() && isPlayerTurn()){
